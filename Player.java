@@ -5,5 +5,5 @@
 //********************************************************************
 
 public interface Player {
-	public void placeSymbol(int index);
+	public void placeSymbol();
 }

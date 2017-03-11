@@ -40,6 +40,16 @@ public class Board {
 		return emptyTiles;
 	}
 
+	public int getAvailableIndex() {
+		int index = MyUtils.range(0, 8);
+		Tile tile = getTile(index);
+		if(tile.isEmpty()) {
+			return index;
+		} else {
+			return getAvailableIndex();
+		}
+	}
+
 	public String toString() {
 		String result = "";
 

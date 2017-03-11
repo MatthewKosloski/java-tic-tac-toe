@@ -4,7 +4,7 @@
 // A class representing an individual user.
 //********************************************************************
 
-public class User implements Player {
+public class User {
 
 	private Board board;
 	private char symbol;
@@ -15,7 +15,8 @@ public class User implements Player {
 	}
 
 	public void placeSymbol(int index) {
-		board.getTile(index).setSymbol(symbol);
+		Tile tile = board.getTile(index);
+		if(tile.isEmpty()) tile.setSymbol(symbol);
 		System.out.println("User placeSymbol");
 	}
 

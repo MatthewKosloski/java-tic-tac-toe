@@ -5,7 +5,7 @@
 // determines where to place its symbol on the board.
 //********************************************************************
 
-public class Computer implements Player {
+public class Computer {
 
 	private Board board;
 	private char symbol;
@@ -15,8 +15,11 @@ public class Computer implements Player {
 		this.symbol = symbol;
 	}
 
-	public void placeSymbol(int index) {
-		board.getTile(index).setSymbol(symbol);
+	public void placeSymbol() {
+		int index = board.getAvailableIndex();
+		Tile tile = board.getTile(index);
+		tile.setSymbol(symbol);
 		System.out.println("Computer placeSymbol");
 	}
+
 }

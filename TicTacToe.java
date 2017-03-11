@@ -16,7 +16,14 @@ public class TicTacToe {
 		Computer computer = new Computer(board, O_PIECE);
 
 		user.placeSymbol(0);
-		computer.placeSymbol(4);
+		user.placeSymbol(1);
+		user.placeSymbol(2);
+		user.placeSymbol(3);
+		user.placeSymbol(4);
+		user.placeSymbol(5);
+		user.placeSymbol(6);
+		// user.placeSymbol(7);
+		computer.placeSymbol();
 
 		System.out.print(board);
 
