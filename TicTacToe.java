@@ -11,15 +11,12 @@ public class TicTacToe {
 		final char X_PIECE = 'X';
 		final char O_PIECE = 'O';
 
-		Board board;
-		Player user, computer;
+		Board board = new Board();
+		User user = new User(board, X_PIECE);
+		Computer computer = new Computer(board, O_PIECE);
 
-		board = new Board();
-
-		user = new Player(board, X_PIECE);
-		computer = new Player(board, O_PIECE);
-
-		// board.getTile(0).setSymbol('X');
+		user.placeSymbol(0);
+		computer.placeSymbol(4);
 
 		System.out.print(board);
 

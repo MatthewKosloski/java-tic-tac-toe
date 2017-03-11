@@ -1,26 +1,9 @@
 //********************************************************************
 // Player.java
 //
-// A class representing an individual player.  It should be
-// instantiated with two arguments: the board object and a symbol.
+// An interface to define required methods for the user and computer.
 //********************************************************************
 
-public class Player {
-
-	private Board board;
-	private char symbol;
-
-	public Player(Board board, char symbol) {
-		this.board = board;
-		this.symbol = symbol;
-	}
-
-	public placeSymbol(int index) {
-		board.getTile(index).setSymbol(symbol);
-	}
-
-	public String toString() {
-		return symbol + "";
-	}
-
+public interface Player {
+	public void placeSymbol(int index);
 }
