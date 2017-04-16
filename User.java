@@ -4,24 +4,15 @@
 // A class representing an individual user.
 //********************************************************************
 
-public class User {
-
-	private Board board;
-	private char symbol;
+public class User extends Player {
 
 	public User(Board board, char symbol) {
-		this.board = board;
-		this.symbol = symbol;
+		super(board, symbol);
 	}
 
 	public void placeSymbol(int index) {
 		Tile tile = board.getTile(index);
-		if(tile.isEmpty()) tile.setSymbol(symbol);
-		System.out.println("User placeSymbol");
-	}
-
-	public String toString() {
-		return symbol + "";
+		tile.setSymbol(symbol);
 	}
 
 }

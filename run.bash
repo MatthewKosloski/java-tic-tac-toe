@@ -1,4 +1,4 @@
 #!/bin/bash  
 path=.;
-program=TicTacToe; 
+program=Main; 
 find . -name $program.java | entr -c bash compile.bash $path $program;

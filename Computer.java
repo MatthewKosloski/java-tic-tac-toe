@@ -1,25 +1,19 @@
 //********************************************************************
 // Computer.java
 //
-// A class representing a computer player that intelligently
-// determines where to place its symbol on the board.
+// A class representing the computer.
 //********************************************************************
 
-public class Computer {
-
-	private Board board;
-	private char symbol;
+public class Computer extends Player {
 
 	public Computer(Board board, char symbol) {
-		this.board = board;
-		this.symbol = symbol;
+		super(board, symbol);
 	}
 
-	public void placeSymbol() {
-		int index = board.getAvailableIndex();
-		Tile tile = board.getTile(index);
+	public void placeSymbol(int index) {
+		int randomIndex = board.getAvailableTileIndex();
+		Tile tile = board.getTile(randomIndex);
 		tile.setSymbol(symbol);
-		System.out.println("Computer placeSymbol");
 	}
 
 }

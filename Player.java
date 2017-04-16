@@ -1,9 +1,29 @@
 //********************************************************************
 // Player.java
 //
-// An interface to define required methods for the user and computer.
+// --
 //********************************************************************
 
-public interface Player {
-	public void placeSymbol();
+public class Player {
+	protected Board board;
+	protected char symbol;
+
+	public Player(Board board, char symbol) {
+		this.board = board;
+		this.symbol = symbol;
+	}
+
+	public void placeSymbol(int index) {}
+
+	public char getSymbol() {
+		return symbol;
+	}
+
+	public void setSymbol(char symbol) {
+		this.symbol = Character.toUpperCase(symbol);
+	}
+
+	public String toString() {
+		return symbol + "";
+	}
 }

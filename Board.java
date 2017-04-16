@@ -2,17 +2,20 @@
 // Board.java
 //
 // A class that encapsulates the tiles.
+// This is an aggregate object, for it contains references to 
+// Tiles as instance data.
 //********************************************************************
 
 import java.util.ArrayList;
 
 public class Board {
 
-	private final int TILE_QUANTITY = 9;
+	public final int TILE_QUANTITY;
 	private ArrayList<Tile> tiles = new ArrayList<Tile>();
 
 	// Constructor: Initially populates the board with empty tiles
-	public Board() {
+	public Board(int tiles) {
+		this.TILE_QUANTITY = tiles;
 		populate();
 	}
 
@@ -32,6 +35,10 @@ public class Board {
 		return tiles.get(index);
 	}
 
+	public boolean isTileEmpty(int index) {
+		return tiles.get(index).isEmpty();
+	}
+
 	public ArrayList getEmptyTiles() {
 		ArrayList<Tile> emptyTiles = new ArrayList<Tile>();
 		for(int i = 0; i < tiles.size(); i++) {
@@ -40,13 +47,13 @@ public class Board {
 		return emptyTiles;
 	}
 
-	public int getAvailableIndex() {
+	public int getAvailableTileIndex() {
 		int index = MyUtils.range(0, 8);
 		Tile tile = getTile(index);
 		if(tile.isEmpty()) {
 			return index;
 		} else {
-			return getAvailableIndex();
+			return getAvailableTileIndex();
 		}
 	}
 
