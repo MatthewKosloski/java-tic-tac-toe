@@ -10,17 +10,28 @@ public class TicTacToe {
 
 	private Scanner scan = new Scanner(System.in);
 
-	private final char X_PIECE = 'X';
-	private final char O_PIECE = 'O';
+	private final char X_PIECE = 'X', O_PIECE = 'O';
 	private final int TILE_QUANTITY = 9;
+
+	private final char YES = 'y', NO = 'n';
+
+	private final String SYMBOL_PROMPT_EXCEPTION = "Please input an \"X\" or \"O\".";
+	private final String TURN_PROMPT_EXCEPTION = "Please input an integer between 0 and %1$d.";
+
+	private final String SYMBOL_PROMPT = "Desired game piece (%1$s/%2$s):";
+	private final String TURN_PROMPT = "Want to go first? (%1$s/%2$s):";
+	private final String PIECE_PROMPT = "Place piece on tile (0-%1$d):";
 
 	private Board board;
 	private User user;
 	private Computer computer;
 
+	private String userSymbolInput;
+	private String userIndexInput;
+
 	private char userSymbol;
-	private String userFirstTurn;
-	private int userIndex;
+	private String userFirstTurn = "";
+	private int userIndex = -1;
 
 	public TicTacToe() {
 
@@ -28,30 +39,29 @@ public class TicTacToe {
 		user = new User(board, X_PIECE);
 		computer = new Computer(board, O_PIECE);
 
-		// Initially ask for a game piece
-		askForSymbol();
-
-		// Keep on asking until provided input matches the following condition
+		// Ask for the user's desired game piece (X or O)
 		while(!(MyUtils.charEqualsIgnoreCase(userSymbol, X_PIECE) || MyUtils.charEqualsIgnoreCase(userSymbol, O_PIECE))) {
 			askForSymbol();
+
+			try {
+				userSymbol = userSymbolInput.charAt(0);
+			} catch(StringIndexOutOfBoundsException e) {
+				System.out.println(SYMBOL_PROMPT_EXCEPTION);
+			}
+
 		}
 
-		// Set the validated user input as game piece
+		// Set both player's symbols
 		user.setSymbol(userSymbol);
-
-		// Set computer's symbol to the opposing symbol
 		computer.setSymbol(MyUtils.charEqualsIgnoreCase(userSymbol, X_PIECE) ? O_PIECE : X_PIECE);
 
 		// Ask if the user wants to go first
-		askForFirstTurn();
-
-		// Keep on asking until provided input matches the following condition
-		while(!(userFirstTurn.equalsIgnoreCase("y") || userFirstTurn.equalsIgnoreCase("n"))) {
+		while(!(userFirstTurn.equalsIgnoreCase(YES+"") || userFirstTurn.equalsIgnoreCase(NO+""))) {
 			askForFirstTurn();
 		}
 
 		// If player is first...
-		if(userFirstTurn.equalsIgnoreCase("y")) {
+		if(userFirstTurn.equalsIgnoreCase(YES+"")) {
 			userTurn();
 			computer.computeIndex();
 			printBoard();
@@ -71,28 +81,32 @@ public class TicTacToe {
 	}
 
 	private void askForSymbol() {
-		System.out.print("Desired game piece (X/O):");
-		userSymbol = scan.nextLine().charAt(0);
+		System.out.print(String.format(SYMBOL_PROMPT, X_PIECE, O_PIECE));
+		userSymbolInput = scan.nextLine();
 	}
 
 	private void askForFirstTurn() {
-		System.out.print("Want to go first? (y/n):");
+		System.out.print(String.format(TURN_PROMPT, YES, NO));
 		userFirstTurn = scan.nextLine();
 	}
 
 	private void askForPiece() {
-		System.out.print("Place piece on tile (0-8):");
-		userIndex = scan.nextInt();
+		System.out.print(String.format(PIECE_PROMPT, TILE_QUANTITY - 1));
+		userIndexInput = scan.nextLine();
 	}
 
+	// Ask for a tile index from player
 	private void userTurn() {
-		// Ask for a tile index value from the player
-		askForPiece();
-		// Keep on asking until provided input matches the following conditions
-		while(!(userIndex >= 0 && userIndex <= TILE_QUANTITY - 1) || !(board.isTileEmpty(userIndex))) {
+		do {
 			askForPiece();
-		}
-		// Set the validated symbol index
+
+			try {
+				userIndex = Integer.parseInt(userIndexInput);
+			} catch(NumberFormatException e) {
+				System.out.println(String.format(TURN_PROMPT_EXCEPTION, TILE_QUANTITY - 1));
+			}
+
+		} while(!(userIndex >= 0 && userIndex <= TILE_QUANTITY - 1) || !(board.isTileEmpty(userIndex)));
 		user.placeSymbol(userIndex);
 	}
 

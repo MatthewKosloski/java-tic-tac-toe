@@ -3,25 +3,25 @@ import java.util.*;
 public class A {
 
 	private Scanner scan;
-	private int number;
+	private String input;
+	private char symbol;
 
 	public A() {
 		
 		scan = new Scanner(System.in);
 
-		ask(); // initial ask
+		while(symbol != 'a') {
+			System.out.print("Char:");
+			input = scan.nextLine();
 
-		// keep on asking until condition is met
-		while(number != 5) {
-			ask();
+			try {
+				symbol = input.charAt(0);
+			} catch(StringIndexOutOfBoundsException e) {
+				System.out.println("Invalid value.");
+			}
+
 		}
-
-		System.out.println("Hooray!");
-	}
-
-	private void ask() {
-		System.out.print("Number: ");
-		number = scan.nextInt();
+		
 	}
 
 }
