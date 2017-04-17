@@ -10,9 +10,4 @@ public class User extends Player {
 		super(board, symbol);
 	}
 
-	public void placeSymbol(int index) {
-		Tile tile = board.getTile(index);
-		tile.setSymbol(symbol);
-	}
-
 }

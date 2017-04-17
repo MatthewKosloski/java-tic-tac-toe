@@ -12,7 +12,7 @@ public class Main {
 		System.out.println();
 		System.out.println("By Logan Miller and Matthew Kosloski.");
 		System.out.println();
-		System.out.println("=====================================");
+		System.out.println("====================================");
 		System.out.println();
 		TicTacToe t = new TicTacToe();
 

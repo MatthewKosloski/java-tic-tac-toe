@@ -15,4 +15,8 @@ public enum MyUtils {;
 		return generator.nextInt(max + 1) + min;
 	}
 
+	public static boolean charEqualsIgnoreCase(char a, char b) {
+		return new String(a + "").equalsIgnoreCase(new String(b + ""));
+	}
+
 }

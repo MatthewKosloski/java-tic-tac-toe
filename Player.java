@@ -13,14 +13,17 @@ public class Player {
 		this.symbol = symbol;
 	}
 
-	public void placeSymbol(int index) {}
-
 	public char getSymbol() {
 		return symbol;
 	}
 
 	public void setSymbol(char symbol) {
 		this.symbol = Character.toUpperCase(symbol);
+	}
+
+	public void placeSymbol(int index) {
+		Tile t = board.getTile(index);
+		t.setSymbol(symbol);
 	}
 
 	public String toString() {

@@ -10,10 +10,12 @@ public class Computer extends Player {
 		super(board, symbol);
 	}
 
-	public void placeSymbol(int index) {
-		int randomIndex = board.getAvailableTileIndex();
-		Tile tile = board.getTile(randomIndex);
-		tile.setSymbol(symbol);
+	// Algorithm goes here.
+	public void computeIndex() {
+		if(board.hasAvailableTiles()) {
+			int randomIndex = board.getAvailableTileIndex();
+			placeSymbol(randomIndex);
+		}
 	}
 
 }

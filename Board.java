@@ -36,7 +36,11 @@ public class Board {
 	}
 
 	public boolean isTileEmpty(int index) {
-		return tiles.get(index).isEmpty();
+		if(index < 0 || index > (TILE_QUANTITY - 1)) {
+			return false;
+		} else {
+			return tiles.get(index).isEmpty();
+		}
 	}
 
 	public ArrayList getEmptyTiles() {
@@ -47,6 +51,11 @@ public class Board {
 		return emptyTiles;
 	}
 
+	public boolean hasAvailableTiles() {
+		return getEmptyTiles().size() != 0;
+	}
+ 	
+ 	// Will be removed soon.
 	public int getAvailableTileIndex() {
 		int index = MyUtils.range(0, 8);
 		Tile tile = getTile(index);
