@@ -11,7 +11,9 @@ public class TicTacToe {
 	private Scanner scan = new Scanner(System.in);
 
 	private final char X_PIECE = 'X', O_PIECE = 'O';
-	private final int TILE_QUANTITY = 9;
+	
+	private final int BOARD_SIZE = 3;
+	private final int BOARD_TILE_QUANTITY = (int) Math.pow(BOARD_SIZE, 2);
 
 	private final char YES = 'y', NO = 'n';
 
@@ -35,7 +37,7 @@ public class TicTacToe {
 
 	public TicTacToe() {
 
-		board = new Board(TILE_QUANTITY);
+		board = new Board(BOARD_SIZE);
 		user = new User(board, X_PIECE);
 		computer = new Computer(board, O_PIECE);
 
@@ -91,7 +93,7 @@ public class TicTacToe {
 	}
 
 	private void askForPiece() {
-		System.out.print(String.format(PIECE_PROMPT, TILE_QUANTITY - 1));
+		System.out.print(String.format(PIECE_PROMPT, BOARD_TILE_QUANTITY - 1));
 		userIndexInput = scan.nextLine();
 	}
 
@@ -103,10 +105,10 @@ public class TicTacToe {
 			try {
 				userIndex = Integer.parseInt(userIndexInput);
 			} catch(NumberFormatException e) {
-				System.out.println(String.format(TURN_PROMPT_EXCEPTION, TILE_QUANTITY - 1));
+				System.out.println(String.format(TURN_PROMPT_EXCEPTION, BOARD_TILE_QUANTITY - 1));
 			}
 
-		} while(!(userIndex >= 0 && userIndex <= TILE_QUANTITY - 1) || !(board.isTileEmpty(userIndex)));
+		} while(!(userIndex >= 0 && userIndex <= BOARD_TILE_QUANTITY - 1) || !(board.isTileEmpty(userIndex)));
 		user.placeSymbol(userIndex);
 	}
 

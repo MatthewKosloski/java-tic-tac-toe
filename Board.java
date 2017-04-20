@@ -10,49 +10,64 @@ import java.util.ArrayList;
 
 public class Board {
 
-	public final int TILE_QUANTITY;
-	private ArrayList<Tile> tiles = new ArrayList<Tile>();
+	public final int BOARD_SIZE;
+	public final int BOARD_TILE_QUANTITY;
+	private Tile[][] tiles;
 
 	// Constructor: Initially populates the board with empty tiles
-	public Board(int tiles) {
-		this.TILE_QUANTITY = tiles;
+	public Board(int boardSize) {
+		BOARD_SIZE = boardSize;
+		BOARD_TILE_QUANTITY = (int) Math.pow(BOARD_SIZE, 2);
+		tiles = new Tile[BOARD_SIZE][BOARD_SIZE];
 		populate();
 	}
 
 	// Populates the board with empty tiles
 	public void populate() {
-		for(int i = 0; i < TILE_QUANTITY; i++) {
-			tiles.add(new Tile('-'));
+		for(int rows = 0; rows < BOARD_SIZE; rows++) {
+			for(int cols = 0; cols < BOARD_SIZE; cols++) {
+				tiles[rows][cols] = new Tile('-');
+			}
 		}
 	}
 
-	public ArrayList getAllTiles() {
+	public Tile[][] getAllTiles() {
 		return tiles;
 	}
 
-	// Returns the tile object from the tiles arraylist with a given index
+	/*
+		Returns a certain tile from a provided index value 
+		between 0-(BOARD_TILE_QUANTITY - 1).
+
+		Example:
+		If a board has a size of 3 (3 rows and 3 columns),
+		the index value should be between 0-8.
+	*/
 	public Tile getTile(int index) {
-		return tiles.get(index);
+		int row = (int) Math.floor(index / BOARD_SIZE);
+		int col = (int) Math.floor(index % BOARD_SIZE);
+		return tiles[row][col];
+
 	}
 
 	public boolean isTileEmpty(int index) {
-		if(index < 0 || index > (TILE_QUANTITY - 1)) {
+		if(index < 0 || index > (BOARD_TILE_QUANTITY - 1)) {
 			return false;
 		} else {
-			return tiles.get(index).isEmpty();
+			return getTile(index).isEmpty();
 		}
-	}
-
-	public ArrayList getEmptyTiles() {
-		ArrayList<Tile> emptyTiles = new ArrayList<Tile>();
-		for(int i = 0; i < tiles.size(); i++) {
-			if(getTile(i).isEmpty()) emptyTiles.add(tiles.get(i));
-		}
-		return emptyTiles;
 	}
 
 	public boolean hasAvailableTiles() {
-		return getEmptyTiles().size() != 0;
+		boolean areAvailable = false;
+		for(int rows = 0; rows < BOARD_SIZE; rows++) {
+			for(int cols = 0; cols < BOARD_SIZE; cols++) {
+				if(!areAvailable && tiles[rows][cols].isEmpty()) {
+					areAvailable = true;
+				}
+			}
+		}
+		return areAvailable;
 	}
  	
  	// Will be removed soon.
@@ -68,15 +83,15 @@ public class Board {
 
 	public String toString() {
 		String result = "";
-
-		int rows = (int) Math.sqrt(tiles.size());
-		for(int i = 0; i < tiles.size(); i++) {
-			result += (i % rows == 0 ? "" : " ") + tiles.get(i) + "";
-			if(i % rows == rows - 1) result += "\n";
+		for(int rows = 0; rows < BOARD_SIZE; rows++) {
+			for(int cols = 0; cols < BOARD_SIZE; cols++) {
+				result += tiles[rows][cols];
+				if(cols == BOARD_SIZE - 1) {
+					result += "\n";
+				}
+			}
 		}
-
 		return result;
-
 	}
 
 }
