@@ -11,15 +11,12 @@ import java.util.ArrayList;
 public class Board {
 
 	private final int BOARD_SIZE, BOARD_TILE_QUANTITY;
-	private final char X_PIECE, O_PIECE;
 	private Tile[][] tiles;
 
 	// Constructor: Initially populates the board with empty tiles
-	public Board(int boardSize, char xPiece, char oPiece) {
+	public Board(int boardSize) {
 		BOARD_SIZE = boardSize;
 		BOARD_TILE_QUANTITY = (int) Math.pow(BOARD_SIZE, 2);
-		X_PIECE = xPiece;
-		O_PIECE = oPiece;
 		tiles = new Tile[BOARD_SIZE][BOARD_SIZE];
 		populate();
 	}

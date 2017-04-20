@@ -5,6 +5,7 @@
 //********************************************************************
 
 import java.util.Scanner;
+import java.util.regex.*;
 
 public class TicTacToe {
 
@@ -36,7 +37,7 @@ public class TicTacToe {
 
 	public TicTacToe() {
 
-		board = new Board(BOARD_SIZE, X_PIECE, O_PIECE);
+		board = new Board(BOARD_SIZE);
 		user = new User(board, X_PIECE);
 		computer = new Computer(board, O_PIECE);
 
@@ -71,35 +72,13 @@ public class TicTacToe {
 			printBoard();
 		}
 
-		while(board.hasAvailableTiles()) {
+		while(board.hasAvailableTiles() && hasNoWinner()) {
 			userTurn();
 			computer.computeIndex();
 			printBoard();
-			System.out.print(board.getBoardString());
 		}
 
-		System.out.println("Game over.");
-
-		// String[] rowStrings = board.getRowStrings();
-		// String[] columnStrings = board.getColumnStrings();
-		// String[] diagonalStrings = board.getDiagonals();
-
-
-		// for(int i = 0; i < rowStrings.length; i++) {
-		// 	System.out.println(rowStrings[i]);
-		// }
-
-		// System.out.println();
-
-		// for(int i = 0; i < columnStrings.length; i++) {
-		// 	System.out.println(columnStrings[i]);
-		// }
-
-		// System.out.println();
-
-		// for(int i = 0; i < diagonalStrings.length; i++) {
-		// 	System.out.println(diagonalStrings[i]);
-		// }
+		printGameResult();
 
 	}
 
@@ -130,6 +109,47 @@ public class TicTacToe {
 
 		} while(!(userIndex >= 0 && userIndex <= BOARD_TILE_QUANTITY - 1) || !(board.isTileEmpty(userIndex)));
 		user.placeSymbol(userIndex);
+	}
+
+	private char getWinningCharacter() {
+		String xPatt = "", oPatt = "";
+		char result = ' ';
+
+		for(int i = 0; i < BOARD_SIZE; i++) {
+			xPatt += X_PIECE + "";
+			oPatt += O_PIECE + "";
+		}
+
+		boolean x = Pattern.compile(xPatt).matcher(board.getBoardString()).find();
+		boolean o = Pattern.compile(oPatt).matcher(board.getBoardString()).find();
+
+		if(x) {
+			result = X_PIECE;
+		} else if(o) {
+			result = O_PIECE;
+		} else {
+			result = ' ';
+		}
+
+		return result;
+	}
+
+	private void printGameResult() {
+		String result = "";
+
+		if(getWinningCharacter() == user.getSymbol()) {
+			result += "You won!";
+		} else if(getWinningCharacter() == computer.getSymbol()) {
+			result += "You lost!";
+		} else {
+			result += "Tied game.";
+		}
+
+		System.out.println(result);
+	}
+
+	private boolean hasNoWinner() {
+		return getWinningCharacter() == ' ';
 	}
 
 	private void printBoard() {
