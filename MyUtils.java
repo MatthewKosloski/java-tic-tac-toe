@@ -19,4 +19,24 @@ public enum MyUtils {;
 		return new String(a + "").equalsIgnoreCase(new String(b + ""));
 	}
 
+	public static String[] mergeStringArrays(String[] ... arrs) {
+		int len = 0, count = 0;
+
+		// get the sum of the array lengths
+		for(int i = 0; i < arrs.length; i++) {
+			len += arrs[i].length;
+		}
+
+		String[] result = new String[len];
+
+		for(int i = 0; i < arrs.length; i++) {
+			for(int j = 0; j < arrs[i].length; j++) {
+				result[count] = arrs[i][j];
+				count++;
+			}
+		}
+
+		return result;
+	}
+
 }

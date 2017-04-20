@@ -12,8 +12,7 @@ public class TicTacToe {
 
 	private final char X_PIECE = 'X', O_PIECE = 'O';
 	
-	private final int BOARD_SIZE = 3;
-	private final int BOARD_TILE_QUANTITY = (int) Math.pow(BOARD_SIZE, 2);
+	private final int BOARD_SIZE = 3, BOARD_TILE_QUANTITY = (int) Math.pow(BOARD_SIZE, 2);
 
 	private final char YES = 'y', NO = 'n';
 
@@ -37,7 +36,7 @@ public class TicTacToe {
 
 	public TicTacToe() {
 
-		board = new Board(BOARD_SIZE);
+		board = new Board(BOARD_SIZE, X_PIECE, O_PIECE);
 		user = new User(board, X_PIECE);
 		computer = new Computer(board, O_PIECE);
 
@@ -76,9 +75,31 @@ public class TicTacToe {
 			userTurn();
 			computer.computeIndex();
 			printBoard();
+			System.out.print(board.getBoardString());
 		}
 
 		System.out.println("Game over.");
+
+		// String[] rowStrings = board.getRowStrings();
+		// String[] columnStrings = board.getColumnStrings();
+		// String[] diagonalStrings = board.getDiagonals();
+
+
+		// for(int i = 0; i < rowStrings.length; i++) {
+		// 	System.out.println(rowStrings[i]);
+		// }
+
+		// System.out.println();
+
+		// for(int i = 0; i < columnStrings.length; i++) {
+		// 	System.out.println(columnStrings[i]);
+		// }
+
+		// System.out.println();
+
+		// for(int i = 0; i < diagonalStrings.length; i++) {
+		// 	System.out.println(diagonalStrings[i]);
+		// }
 
 	}
 
@@ -101,7 +122,6 @@ public class TicTacToe {
 	private void userTurn() {
 		do {
 			askForPiece();
-
 			try {
 				userIndex = Integer.parseInt(userIndexInput);
 			} catch(NumberFormatException e) {
@@ -114,6 +134,7 @@ public class TicTacToe {
 
 	private void printBoard() {
 		System.out.print(board);
+		System.out.println();
 	}
 
 }
