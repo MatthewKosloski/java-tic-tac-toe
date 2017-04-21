@@ -72,9 +72,11 @@ public class TicTacToe {
 			printBoard();
 		}
 
-		while(board.hasAvailableTiles() && hasNoWinner()) {
+		while(board.hasAvailableTiles() && !hasWinner()) {
 			userTurn();
-			computer.computeIndex();
+			if(!hasWinner()) {
+				computer.computeIndex();
+			}
 			printBoard();
 		}
 
@@ -148,8 +150,8 @@ public class TicTacToe {
 		System.out.println(result);
 	}
 
-	private boolean hasNoWinner() {
-		return getWinningCharacter() == ' ';
+	private boolean hasWinner() {
+		return getWinningCharacter() != ' ';
 	}
 
 	private void printBoard() {
