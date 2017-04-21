@@ -136,8 +136,10 @@ public class Board {
 		}
 
 		// diagonal from top-right to bottom-left
-		for(int i = BOARD_SIZE - 1; i >= 0; i--) {
-			diagonalTopRight += tiles[i][i].getSymbol() + "";
+		int col = BOARD_SIZE - 1;
+		for(int row = 0; row < BOARD_SIZE; row++) {
+			diagonalTopRight += tiles[row][col].getSymbol() + "";
+			col--;
 		}
 
 		diagonals[0] = diagonalTopLeft;
