@@ -6,11 +6,12 @@
 // Tiles as instance data.
 //********************************************************************
 
-import java.util.ArrayList;
+import java.util.regex.*;
 
 public class Board {
 
 	private final int BOARD_SIZE, BOARD_TILE_QUANTITY;
+	public final String PIECE_REGEX = "[XO]";
 	private Tile[][] tiles;
 
 	// Constructor: Initially populates the board with empty tiles
@@ -25,13 +26,15 @@ public class Board {
 	public void populate() {
 		for(int rows = 0; rows < BOARD_SIZE; rows++) {
 			for(int cols = 0; cols < BOARD_SIZE; cols++) {
-				tiles[rows][cols] = new Tile('-');
+				tiles[rows][cols] = new Tile();
 			}
 		}
-	}
 
-	public Tile[][] getAllTiles() {
-		return tiles;
+		// Set tile indices (0-BOARD_TILE_QUANTITY - 1)
+		for(int i = 0; i < getRows().length; i++) {
+			getRows()[i].setIndex(i);
+		}
+
 	}
 
 	/*
@@ -46,7 +49,6 @@ public class Board {
 		int row = (int) Math.floor(index / BOARD_SIZE);
 		int col = (int) Math.floor(index % BOARD_SIZE);
 		return tiles[row][col];
-
 	}
 
 	public boolean isTileEmpty(int index) {
@@ -69,7 +71,6 @@ public class Board {
 		return areAvailable;
 	}
 
- 	// Will be removed soon.
 	public int getAvailableTileIndex() {
 		int index = MyUtils.range(0, 8);
 		Tile tile = getTile(index);
@@ -85,11 +86,10 @@ public class Board {
 		diagonals separated by spaces.
 	
 		Ex: XXX O-O -O- XO- X-O XO- X-- --X
-
 	*/
 	public String getBoardString() {
 		String[] lines = MyUtils.mergeStringArrays(
-			getRows(), getColums(), getDiagonals()
+			getRowSymbols(), getColumnSymbols(), getDiagonalSymbols()
 		);
 
 		String result = "";
@@ -101,58 +101,149 @@ public class Board {
 		return result;
 	}
 
-	private String[] getRows() {
-		String[] rowStrings = new String[BOARD_SIZE];
-		for(int rows = 0; rows < BOARD_SIZE; rows++) {
-			String rowString = "";
-			for(int cols = 0; cols < BOARD_SIZE; cols++) {
-				rowString += tiles[rows][cols].getSymbol() + "";
+	private Tile[] getRows() {
+		Tile[] rows = new Tile[BOARD_TILE_QUANTITY];
+
+		int count = 0;
+		for(int row = 0; row < BOARD_SIZE; row++) {
+			for(int col = 0; col < BOARD_SIZE; col++) {
+				rows[count] = tiles[row][col];
+				count++;
 			}
-			rowStrings[rows] = rowString;	
 		}
-		return rowStrings;
+
+		return rows;
 	}
 
-	private String[] getColums() {
-		String[] colStrings = new String[BOARD_SIZE];
-		for(int rows = 0; rows < BOARD_SIZE; rows++) {
-			String colString = "";
-			for(int cols = 0; cols < BOARD_SIZE; cols++) {
-				colString += tiles[cols][rows].getSymbol() + "";
+	private String[] getRowSymbols() {
+		String[] symbols = new String[BOARD_SIZE];
+
+		int count = 0;
+		for(int i = 0; i < BOARD_SIZE; i++) {
+			String row = "";
+			for(int j = 0; j < BOARD_SIZE; j++) {
+				row += getRows()[count].getSymbol() + "";
+				count++;
 			}
-			colStrings[rows] = colString;	
+			symbols[i] = row;
 		}
-		return colStrings;
+
+		return symbols;
 	}
 
-	private String[] getDiagonals() {
-		String[] diagonals = new String[2];
+	private int[] getRowSums() {
+		int[] rowSums = new int[BOARD_SIZE];
 
-		String diagonalTopLeft = "", diagonalTopRight = "";
+		for(int i = 0; i < getRowSymbols().length; i++) {
+			Pattern p = Pattern.compile(PIECE_REGEX);
+      		Matcher m = p.matcher(getRowSymbols()[i]);
+			int count = 0;
+			while(m.find()) count++;
+			rowSums[i] = count;
+		}
+
+		return rowSums;
+	}
+
+	private Tile[] getColumns() {
+		Tile[] cols = new Tile[BOARD_TILE_QUANTITY];
+
+		int count = 0;
+		for(int col = 0; col < BOARD_SIZE; col++) {
+			for(int row = 0; row < BOARD_SIZE; row++) {
+				cols[count] = tiles[row][col];
+				count++;
+			}
+		}
+
+		return cols;
+	}
+
+	private String[] getColumnSymbols() {
+		String[] symbols = new String[BOARD_SIZE];
+
+		int count = 0;
+		for(int i = 0; i < BOARD_SIZE; i++) {
+			String column = "";
+			for(int j = 0; j < BOARD_SIZE; j++) {
+				column += getColumns()[count].getSymbol() + "";
+				count++;
+			}
+			symbols[i] = column;
+		}
+
+		return symbols;
+	}
+
+	private int[] getColumnSums() {
+		int[] colSums = new int[BOARD_SIZE];
+
+		for(int i = 0; i < getRowSymbols().length; i++) {
+			Pattern p = Pattern.compile(PIECE_REGEX);
+      		Matcher m = p.matcher(getColumnSymbols()[i]);
+			int count = 0;
+			while(m.find()) count++;
+			colSums[i] = count;
+		}
+
+		return colSums;
+	}
+
+	private Tile[] getDiagonals() {
+		Tile[] diagonals = new Tile[BOARD_SIZE * 2];
+
+		int count = 0, col = BOARD_SIZE - 1;
 
 		// diagonal from top-left to bottom-right
 		for(int i = 0; i < BOARD_SIZE; i++) {
-			diagonalTopLeft += tiles[i][i].getSymbol() + "";
+			diagonals[count] = tiles[i][i];
+			count++;
 		}
 
 		// diagonal from top-right to bottom-left
-		int col = BOARD_SIZE - 1;
 		for(int row = 0; row < BOARD_SIZE; row++) {
-			diagonalTopRight += tiles[row][col].getSymbol() + "";
-			col--;
+			diagonals[count] = tiles[row][col];
+			count++; col--;
 		}
 
-		diagonals[0] = diagonalTopLeft;
-		diagonals[1] = diagonalTopRight;
-
 		return diagonals;
+	}
+
+	private String[] getDiagonalSymbols() {
+		String[] symbols = new String[2];
+
+		int count = 0;
+		for(int i = 0; i < 2; i++) {
+			String diagonal = "";
+			for(int j = 0; j < BOARD_SIZE; j++) {
+				diagonal += getDiagonals()[count].getSymbol() + "";
+				count++;
+			}
+			symbols[i] = diagonal;
+		}
+
+		return symbols;
+	}
+
+	private int[] getDiagonalSums() {
+		int[] diagonalSums = new int[2];
+
+		for(int i = 0; i < getDiagonalSymbols().length; i++) {
+			Pattern p = Pattern.compile(PIECE_REGEX);
+      		Matcher m = p.matcher(getDiagonalSymbols()[i]);
+			int count = 0;
+			while(m.find()) count++;
+			diagonalSums[i] = count;
+		}
+
+		return diagonalSums;
 	}
 
 	public String toString() {
 		String result = "";
 		for(int rows = 0; rows < BOARD_SIZE; rows++) {
 			for(int cols = 0; cols < BOARD_SIZE; cols++) {
-				result += tiles[rows][cols];
+				result += tiles[rows][cols] + " ";
 				if(cols == BOARD_SIZE - 1) {
 					result += "\n";
 				}

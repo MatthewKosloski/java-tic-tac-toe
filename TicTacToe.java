@@ -84,7 +84,7 @@ public class TicTacToe {
 					computer.computeIndex();
 				}
 				printBoard();
-				System.out.println(board.getBoardString());
+				// System.out.println(board.getBoardString());
 			}
 
 			printGameResult();

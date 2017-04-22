@@ -6,12 +6,12 @@
 
 public class Tile {
 
-	// instance data
+	private final char EMPTY = '-';
+	private int index;
 	private char symbol;
 
-	// Constructor: Sets the tile's symbol based off a provided character parameter (X or O)
-	public Tile(char symbol) {
-		setSymbol(symbol);
+	public Tile() {
+		setSymbol(EMPTY);
 	}
 
 	// Set the tile's symbol
@@ -24,13 +24,21 @@ public class Tile {
 		return symbol;
 	}
 
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
 	// Check if the tile is empty
 	public boolean isEmpty() {
-		return symbol == '-';
+		return symbol == EMPTY;
 	}
 
 	public String toString() {
-		return symbol + " ";
+		return symbol + "";
 	}
 
 }
