@@ -43,7 +43,7 @@ public class TicTacToe {
 			userFirstTurn = "";
 			userIndex = -1;
 
-			board = new Board(BOARD_SIZE);
+			board = new Board(BOARD_SIZE, X_PIECE, O_PIECE);
 			user = new User(board, X_PIECE);
 			computer = new Computer(board, O_PIECE);
 

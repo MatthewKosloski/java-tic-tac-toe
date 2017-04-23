@@ -1,7 +1,8 @@
 //********************************************************************
 // Player.java
 //
-// --
+// Represents a generic player class with 
+// methods to manage its symbol.
 //********************************************************************
 
 public class Player {

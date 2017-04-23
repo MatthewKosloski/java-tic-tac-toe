@@ -11,11 +11,12 @@ import java.util.regex.*;
 public class Board {
 
 	public final int BOARD_SIZE, BOARD_TILE_QUANTITY;
-	private final String PIECE_REGEX = "[XO]";
+	private String pieceRegex = "";
 	private Tile[][] tiles;
 
 	// Constructor: Initially populates the board with empty tiles
-	public Board(int boardSize) {
+	public Board(int boardSize, char xPiece, char oPiece) {
+		pieceRegex = String.format("[%1$s%2$s]", xPiece, oPiece);
 		BOARD_SIZE = boardSize;
 		BOARD_TILE_QUANTITY = (int) Math.pow(BOARD_SIZE, 2);
 		tiles = new Tile[BOARD_SIZE][BOARD_SIZE];
@@ -135,7 +136,7 @@ public class Board {
 		int[] rowSums = new int[BOARD_SIZE];
 
 		for(int i = 0; i < getRowSymbols().length; i++) {
-			Pattern p = Pattern.compile(PIECE_REGEX);
+			Pattern p = Pattern.compile(pieceRegex);
       		Matcher m = p.matcher(getRowSymbols()[i]);
 			int count = 0;
 			while(m.find()) count++;
@@ -189,7 +190,7 @@ public class Board {
 		int[] colSums = new int[BOARD_SIZE];
 
 		for(int i = 0; i < getRowSymbols().length; i++) {
-			Pattern p = Pattern.compile(PIECE_REGEX);
+			Pattern p = Pattern.compile(pieceRegex);
       		Matcher m = p.matcher(getColumnSymbols()[i]);
 			int count = 0;
 			while(m.find()) count++;
@@ -271,7 +272,7 @@ public class Board {
 		int[] diagonalSums = new int[2];
 
 		for(int i = 0; i < getDiagonalSymbols().length; i++) {
-			Pattern p = Pattern.compile(PIECE_REGEX);
+			Pattern p = Pattern.compile(pieceRegex);
       		Matcher m = p.matcher(getDiagonalSymbols()[i]);
 			int count = 0;
 			while(m.find()) count++;
