@@ -2,6 +2,8 @@
 
 A Tic-Tac-Toe game written in object-oriented Java.  Created by Logan Miller and Matthew Kosloski.
 
+![Screenshot](http://matthewkosloski.me/photos/tictactoe.png)
+
 ## Usage
 
 ### Prerequisites
