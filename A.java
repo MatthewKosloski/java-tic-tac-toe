@@ -2,8 +2,7 @@
 
 import java.util.*;
 import java.util.regex.*;
-
-import com.google.common.collect.Iterators;
+import java.util.stream.*;
 
 public class A {
 
@@ -27,10 +26,15 @@ public class A {
 			}
 		}
 
+		// Set tile indices (0-BOARD_TILE_QUANTITY - 1)
+		for(int i = 0; i < getRows().length; i++) {
+			getRows()[i].setIndex(i);
+		}
+
 		String result = "";
 		for(int rows = 0; rows < BOARD_SIZE; rows++) {
 			for(int cols = 0; cols < BOARD_SIZE; cols++) {
-				result += tiles[rows][cols];
+				result += tiles[rows][cols] + " ";
 				if(cols == BOARD_SIZE - 1) {
 					result += "\n";
 				}
@@ -39,37 +43,91 @@ public class A {
 
 		System.out.println(result);
 
-		// for(int i = 0; i < BOARD_SIZE; i++) {
-		// 	for(int j = 0; j < BOARD_SIZE; j++) {
-		// 		System.out.println(getRows()[i][j]);
-		// 	}
+		// // for(int i = 0; i < BOARD_SIZE; i++) {
+		// // 	for(int j = 0; j < BOARD_SIZE; j++) {
+		// // 		System.out.println(getRows()[i][j]);
+		// // 	}
+		// // }
+
+		// System.out.println("Row sums:");
+		// for(int i = 0; i < getRowSums().length; i++) {
+		// 	System.out.println(getRowSums()[i]);
 		// }
 
-		System.out.println("Row sums:");
-		for(int i = 0; i < getRowSums().length; i++) {
-			System.out.println(getRowSums()[i]);
-		}
+		// System.out.println("Column sums:");
+		// for(int i = 0; i < getColumnSums().length; i++) {
+		// 	System.out.println(getColumnSums()[i]);
+		// }
 
-		System.out.println("Column sums:");
-		for(int i = 0; i < getColumnSums().length; i++) {
-			System.out.println(getColumnSums()[i]);
-		}
+		// System.out.println("Diagonal sums:");
+		// for(int i = 0; i < getDiagonalSums().length; i++) {
+		// 	System.out.println(getDiagonalSums()[i]);
+		// }
 
-		System.out.println("Diagonal sums:");
-		for(int i = 0; i < getDiagonalSums().length; i++) {
-			System.out.println(getDiagonalSums()[i]);
-		}
+		// System.out.println();
 
 		computeIndex();
 
-		String[] colors = {"red", "blue", "green"};
-
-		Iterators.indexOf(Iterators.forArray(colors), new Predicate<String>() {
-	        public boolean apply(String input) {
-	        	System.out.println(input.equals("blue"));
-	        }
-	    });
+		// int[] arr = {3, 3, 1, 2};
+		// System.out.println(MyUtils.getIndexOfLargestInt(arr, 3));
 		
+	}
+
+	private void computeIndex() {
+
+		int computedIndex = -1;
+
+		Index[] indices = {
+			new Index(MyUtils.getIndexOfLargestInt(getRowSums(), BOARD_SIZE)),
+			new Index(MyUtils.getIndexOfLargestInt(getColumnSums(), BOARD_SIZE)),
+			new Index(MyUtils.getIndexOfLargestInt(getDiagonalSums(), BOARD_SIZE))
+		};
+
+		int randomInt = (int) Math.floor(Math.random() * indices.length);
+
+		Index randomIndex = indices[randomInt];
+
+		if(randomInt == 0) {
+			System.out.println("Will occupy a tile in a row.");
+			Tile[] row = getTilesFromRow(randomIndex.getValue());
+			Tile randomTileInRow = null;
+
+			do {
+				randomTileInRow = row[(int)Math.floor(Math.random() * row.length)];
+			} while(!randomTileInRow.isEmpty());
+
+			computedIndex = randomTileInRow.getIndex();
+		} else if(randomInt == 1) {
+			System.out.println("Will occupy a tile in a column.");
+			Tile[] column = getTilesFromColumn(randomIndex.getValue());
+			Tile randomTileInColumn = null;
+
+			do {
+				randomTileInColumn = column[(int)Math.floor(Math.random() * column.length)];
+			} while(!randomTileInColumn.isEmpty());
+
+			computedIndex = randomTileInColumn.getIndex();
+		} else if(randomInt == 2) {
+			System.out.println("Will occupy a tile in a diagonal.");
+			Tile[] diagonal = getTilesFromDiagonal(randomIndex.getValue());
+			Tile randomTileInDiagonal = null;
+
+			do {
+				randomTileInDiagonal = diagonal[(int)Math.floor(Math.random() * diagonal.length)];
+			} while(!randomTileInDiagonal.isEmpty());
+
+			computedIndex = randomTileInDiagonal.getIndex();
+		}
+
+		System.out.println("RandomInt: " + randomInt);
+
+		System.out.println("Row index: " + indices[0].getValue());
+		System.out.println("Column index: " + indices[1].getValue());
+		System.out.println("Diagonal index: " + indices[2].getValue());
+
+		System.out.println("Computed index: " + computedIndex);
+
+		// setSymbol(index);
 	}
 
 	private Tile[] getRows() {
@@ -84,6 +142,34 @@ public class A {
 		}
 
 		return rows;
+	}
+
+	public Tile[] getTilesFromRow(int row) {
+		Tile[] rowTiles = new Tile[BOARD_SIZE];
+
+		for(int col = 0; col < BOARD_SIZE; col++) {
+			rowTiles[col] = tiles[row][col];
+		}
+
+		return rowTiles;
+	}
+
+	public Tile[] getTilesFromColumn(int col) {
+		Tile[] columnTiles = new Tile[BOARD_SIZE];
+
+		for(int row = 0; row < BOARD_SIZE; row++) {
+			columnTiles[row] = tiles[row][col];
+		}
+
+		return columnTiles;
+	}
+
+	public Tile[] getTilesFromDiagonal(int diagonal) {
+		if(diagonal == 0) {
+			return getTopLeftDiagonals();
+		} else {
+			return getTopRightDiagonals();
+		}
 	}
 
 	private String[] getRowSymbols() {
@@ -160,21 +246,43 @@ public class A {
 		return colSums;
 	}
 
+	private Tile[] getTopLeftDiagonals() {
+		Tile[] topLeftDiagonals = new Tile[BOARD_SIZE];
+
+		for(int i = 0; i < BOARD_SIZE; i++) {
+			topLeftDiagonals[i] = tiles[i][i];
+		}
+
+		return topLeftDiagonals;
+	}
+
+	private Tile[] getTopRightDiagonals() {
+		Tile[] topRightDiagonals = new Tile[BOARD_SIZE];
+		int col = BOARD_SIZE - 1;
+
+		for(int row = 0; row < BOARD_SIZE; row++) {
+			topRightDiagonals[row] = tiles[row][col];
+			col--;
+		}
+
+		return topRightDiagonals;
+	}
+
 	private Tile[] getDiagonals() {
 		Tile[] diagonals = new Tile[BOARD_SIZE * 2];
 
-		int count = 0, col = BOARD_SIZE - 1;
+		int count = 0;
 
 		// diagonal from top-left to bottom-right
-		for(int i = 0; i < BOARD_SIZE; i++) {
-			diagonals[count] = tiles[i][i];
+		for(int i = 0; i < getTopLeftDiagonals().length; i++) {
+			diagonals[count] = getTopLeftDiagonals()[i];
 			count++;
 		}
 
 		// diagonal from top-right to bottom-left
-		for(int row = 0; row < BOARD_SIZE; row++) {
-			diagonals[count] = tiles[row][col];
-			count++; col--;
+		for(int i = 0; i < getTopRightDiagonals().length; i++) {
+			diagonals[count] = getTopRightDiagonals()[i];
+			count++;
 		}
 
 		return diagonals;
@@ -208,12 +316,6 @@ public class A {
 		}
 
 		return diagonalSums;
-	}
-
-	public int[] computeIndex() {
-
-		return Arrays.sort(getRowSums());
-
 	}
 
 	public String getBoardString() {

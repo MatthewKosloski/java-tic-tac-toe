@@ -10,8 +10,8 @@ import java.util.regex.*;
 
 public class Board {
 
-	private final int BOARD_SIZE, BOARD_TILE_QUANTITY;
-	public final String PIECE_REGEX = "[XO]";
+	public final int BOARD_SIZE, BOARD_TILE_QUANTITY;
+	private final String PIECE_REGEX = "[XO]";
 	private Tile[][] tiles;
 
 	// Constructor: Initially populates the board with empty tiles
@@ -38,11 +38,11 @@ public class Board {
 	}
 
 	/*
-		Returns a certain tile from a provided index value 
-		between 0-(BOARD_TILE_QUANTITY - 1).
+		Returns a Tile from a provided index value 
+		between 0 and BOARD_TILE_QUANTITY - 1.
 
 		Example:
-		If a board has a size of 3 (3 rows and 3 columns),
+		If BOARD_SIZE is 3 (3 rows and 3 columns),
 		the index value should be between 0-8.
 	*/
 	public Tile getTile(int index) {
@@ -131,7 +131,7 @@ public class Board {
 		return symbols;
 	}
 
-	private int[] getRowSums() {
+	public int[] getRowSums() {
 		int[] rowSums = new int[BOARD_SIZE];
 
 		for(int i = 0; i < getRowSymbols().length; i++) {
@@ -143,6 +143,16 @@ public class Board {
 		}
 
 		return rowSums;
+	}
+
+	public Tile[] getTilesFromRow(int row) {
+		Tile[] rowTiles = new Tile[BOARD_SIZE];
+
+		for(int col = 0; col < BOARD_SIZE; col++) {
+			rowTiles[col] = tiles[row][col];
+		}
+
+		return rowTiles;
 	}
 
 	private Tile[] getColumns() {
@@ -175,7 +185,7 @@ public class Board {
 		return symbols;
 	}
 
-	private int[] getColumnSums() {
+	public int[] getColumnSums() {
 		int[] colSums = new int[BOARD_SIZE];
 
 		for(int i = 0; i < getRowSymbols().length; i++) {
@@ -189,21 +199,53 @@ public class Board {
 		return colSums;
 	}
 
+	public Tile[] getTilesFromColumn(int col) {
+		Tile[] columnTiles = new Tile[BOARD_SIZE];
+
+		for(int row = 0; row < BOARD_SIZE; row++) {
+			columnTiles[row] = tiles[row][col];
+		}
+
+		return columnTiles;
+	}
+
+	private Tile[] getTopLeftDiagonals() {
+		Tile[] topLeftDiagonals = new Tile[BOARD_SIZE];
+
+		for(int i = 0; i < BOARD_SIZE; i++) {
+			topLeftDiagonals[i] = tiles[i][i];
+		}
+
+		return topLeftDiagonals;
+	}
+
+	private Tile[] getTopRightDiagonals() {
+		Tile[] topRightDiagonals = new Tile[BOARD_SIZE];
+		int col = BOARD_SIZE - 1;
+
+		for(int row = 0; row < BOARD_SIZE; row++) {
+			topRightDiagonals[row] = tiles[row][col];
+			col--;
+		}
+
+		return topRightDiagonals;
+	}
+
 	private Tile[] getDiagonals() {
 		Tile[] diagonals = new Tile[BOARD_SIZE * 2];
 
-		int count = 0, col = BOARD_SIZE - 1;
+		int count = 0;
 
 		// diagonal from top-left to bottom-right
-		for(int i = 0; i < BOARD_SIZE; i++) {
-			diagonals[count] = tiles[i][i];
+		for(int i = 0; i < getTopLeftDiagonals().length; i++) {
+			diagonals[count] = getTopLeftDiagonals()[i];
 			count++;
 		}
 
 		// diagonal from top-right to bottom-left
-		for(int row = 0; row < BOARD_SIZE; row++) {
-			diagonals[count] = tiles[row][col];
-			count++; col--;
+		for(int i = 0; i < getTopRightDiagonals().length; i++) {
+			diagonals[count] = getTopRightDiagonals()[i];
+			count++;
 		}
 
 		return diagonals;
@@ -225,7 +267,7 @@ public class Board {
 		return symbols;
 	}
 
-	private int[] getDiagonalSums() {
+	public int[] getDiagonalSums() {
 		int[] diagonalSums = new int[2];
 
 		for(int i = 0; i < getDiagonalSymbols().length; i++) {
@@ -237,6 +279,14 @@ public class Board {
 		}
 
 		return diagonalSums;
+	}
+
+	public Tile[] getTilesFromDiagonal(int diagonal) {
+		if(diagonal == 0) {
+			return getTopLeftDiagonals();
+		} else {
+			return getTopRightDiagonals();
+		}
 	}
 
 	public String toString() {
