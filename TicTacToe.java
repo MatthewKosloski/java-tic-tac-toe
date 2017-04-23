@@ -63,6 +63,13 @@ public class TicTacToe {
 			user.setSymbol(userSymbol);
 			computer.setSymbol(MyUtils.charEqualsIgnoreCase(userSymbol, X_PIECE) ? O_PIECE : X_PIECE);
 
+			// System.out.println("User's desired piece: " + userSymbolInput);
+			// System.out.println("User's symbol: " + user.getSymbol());
+			// System.out.println("Computer's symbol: " + computer.getSymbol());
+
+			// user.setSymbol('>');
+			// System.out.println(user.getSymbol());
+
 			// Ask if the user wants to go first
 			while(!(userFirstTurn.equalsIgnoreCase(YES+"") || userFirstTurn.equalsIgnoreCase(NO+""))) {
 				askForFirstTurn();

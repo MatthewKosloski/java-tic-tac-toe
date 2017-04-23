@@ -14,7 +14,7 @@ A Tic-Tac-Toe game written in object-oriented Java.  Created by Logan Miller and
 - Extract the folder to an accessible location; we recommend the desktop.
 - Open Command Prompt and input the following:
 	```
-		cd desktop/tic-tac-toe-master && javac Main.java && java Main
+	cd desktop/tic-tac-toe-master && javac Main.java && java Main
 	```
 
 ### Mac

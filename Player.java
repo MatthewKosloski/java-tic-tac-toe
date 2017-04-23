@@ -18,7 +18,7 @@ public class Player {
 	}
 
 	public void setSymbol(char symbol) {
-		symbol = Character.toUpperCase(symbol);
+		this.symbol = Character.toUpperCase(symbol);
 	}
 
 	public void placeSymbol(int index) {
