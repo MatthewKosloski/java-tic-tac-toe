@@ -25,9 +25,9 @@ public class TicTacToe {
 	private final String TILE_INDEX_PROMPT = "Place piece on tile (0-%1$d):";
 	private final String ANOTHER_PROMPT = "Play again? (%1$s/%2$s):";
 
-	private Character humanSymbolInput = null;
-	private Integer humanIndex = null;
-	private String playerTurnInput = null, humanIndexInput = null, anotherGameInput = YES + "";
+	private Character humanSymbolInput = ' ';
+	private Integer humanIndex = -1;
+	private String playerTurnInput = "", humanIndexInput = "", anotherGameInput = YES + "";
 
 	private Board board;
 	private Human human;
@@ -74,7 +74,7 @@ public class TicTacToe {
 	}
 
 	private boolean isValidIndexInput() {
-		return !((humanIndex >= 0 && humanIndex <= BOARD_TILE_QUANTITY - 1) || board.isTileEmpty(humanIndex));
+		return ((humanIndex >= 0 && humanIndex <= BOARD_TILE_QUANTITY - 1) && board.isTileEmpty(humanIndex));
 	}
 
 	private boolean gameInProgress() {
@@ -123,7 +123,7 @@ public class TicTacToe {
 				System.out.println(String.format(TURN_PROMPT_EXCEPTION, BOARD_TILE_QUANTITY - 1));
 			}
 
-		} while(isValidIndexInput());
+		} while(!isValidIndexInput());
 		human.placeSymbol(humanIndex);
 	}
 
