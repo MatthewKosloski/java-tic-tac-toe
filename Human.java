@@ -1,12 +1,12 @@
 //********************************************************************
-// User.java
+// Human.java
 //
 // A class representing an individual user.
 //********************************************************************
 
-public class User extends Player {
+public class Human extends Player {
 
-	public User(Board board, char symbol) {
+	public Human(Board board, char symbol) {
 		super(board, symbol);
 	}
 

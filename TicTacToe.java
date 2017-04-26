@@ -11,87 +11,60 @@ public class TicTacToe {
 
 	private Scanner scan = new Scanner(System.in);
 
-	private final char X_PIECE = 'X', O_PIECE = 'O';
+	private final char X_PIECE = 'X', O_PIECE = 'O', EMPTY_PIECE = '-';
 	
 	private final int BOARD_SIZE = 3, BOARD_TILE_QUANTITY = (int) Math.pow(BOARD_SIZE, 2);
 
 	private final char YES = 'y', NO = 'n';
 
-	private final String SYMBOL_PROMPT_EXCEPTION = "Please input an \"X\" or \"O\".";
+	private final String SYMBOL_PROMPT_EXCEPTION = "Please input an \"%1$s\" or \"%2$s\".";
 	private final String TURN_PROMPT_EXCEPTION = "Please input an integer between 0 and %1$d.";
 
 	private final String SYMBOL_PROMPT = "Desired game piece (%1$s/%2$s):";
 	private final String TURN_PROMPT = "Want to go first? (%1$s/%2$s):";
-	private final String PIECE_PROMPT = "Place piece on tile (0-%1$d):";
+	private final String TILE_INDEX_PROMPT = "Place piece on tile (0-%1$d):";
 	private final String ANOTHER_PROMPT = "Play again? (%1$s/%2$s):";
 
+	private Character humanSymbolInput = null;
+	private Integer humanIndex = null;
+	private String playerTurnInput = null, humanIndexInput = null, anotherGameInput = YES + "";
+
 	private Board board;
-	private User user;
-	private Computer computer;
-
-	private String userSymbolInput, userIndexInput, another = YES + "";
-
-	private char userSymbol;
-	private String userFirstTurn;
-	private int userIndex;
+	private Human human;
+	private Ai ai;
 
 	public TicTacToe() {
 
-		while(another.equalsIgnoreCase(YES + "")) {
+		while(anotherGameInput.equalsIgnoreCase(YES + "")) {
 
-			userSymbol = ' ';
-			userFirstTurn = "";
-			userIndex = -1;
-
-			board = new Board(BOARD_SIZE, X_PIECE, O_PIECE);
-			user = new User(board, X_PIECE);
-			computer = new Computer(board, O_PIECE);
+			board = new Board(BOARD_SIZE, X_PIECE, O_PIECE, EMPTY_PIECE);
+			human = new Human(board, X_PIECE);
+			ai = new Ai(board, O_PIECE);
 
 			// Ask for the user's desired game piece (X or O)
-			while(!(MyUtils.charEqualsIgnoreCase(userSymbol, X_PIECE) || MyUtils.charEqualsIgnoreCase(userSymbol, O_PIECE))) {
-				askForSymbol();
-
-				try {
-					userSymbol = userSymbolInput.charAt(0);
-				} catch(StringIndexOutOfBoundsException e) {
-					System.out.println(SYMBOL_PROMPT_EXCEPTION);
-				}
-
-			}
+			do { askForSymbol(); } while(!isValidSymbolInput());
 
 			// Set both player's symbols
-			user.setSymbol(userSymbol);
-			computer.setSymbol(MyUtils.charEqualsIgnoreCase(userSymbol, X_PIECE) ? O_PIECE : X_PIECE);
-
-			// System.out.println("User's desired piece: " + userSymbolInput);
-			// System.out.println("User's symbol: " + user.getSymbol());
-			// System.out.println("Computer's symbol: " + computer.getSymbol());
-
-			// user.setSymbol('>');
-			// System.out.println(user.getSymbol());
+			human.setSymbol(humanSymbolInput);
+			ai.setSymbol(MyUtils.charEqualsIgnoreCase(humanSymbolInput, X_PIECE) ? O_PIECE : X_PIECE);
 
 			// Ask if the user wants to go first
-			while(!(userFirstTurn.equalsIgnoreCase(YES+"") || userFirstTurn.equalsIgnoreCase(NO+""))) {
-				askForFirstTurn();
-			}
+			do { askForFirstTurn(); } while(!isValidTurnInput());
 
 			// If player is first...
-			if(userFirstTurn.equalsIgnoreCase(YES+"")) {
-				userTurn();
-				computer.computeIndex();
+			if(playerTurnInput.equals(YES+"")) {
+				humanMove();
+				ai.calculateBestMove();
 				printBoard();
 			} else {
-				computer.computeIndex();
+				ai.calculateBestMove();
 				printBoard();
 			}
 
-			while(board.hasAvailableTiles() && !hasWinner()) {
-				userTurn();
-				if(!hasWinner()) {
-					computer.computeIndex();
-				}
+			while(gameInProgress()) {
+				humanMove();
+				if(!hasWinner()) ai.calculateBestMove();
 				printBoard();
-				// System.out.println(board.getBoardString());
 			}
 
 			printGameResult();
@@ -100,38 +73,58 @@ public class TicTacToe {
 
 	}
 
+	private boolean isValidIndexInput() {
+		return !((humanIndex >= 0 && humanIndex <= BOARD_TILE_QUANTITY - 1) || board.isTileEmpty(humanIndex));
+	}
+
+	private boolean gameInProgress() {
+		return board.getAvailableTiles().length != 0 && !hasWinner();
+	}
+
+	private boolean isValidTurnInput() {
+		return (playerTurnInput.equals(YES + "") || playerTurnInput.equals(YES + ""));
+	}
+
+	private boolean isValidSymbolInput() {
+		return MyUtils.charEqualsIgnoreCase(humanSymbolInput, X_PIECE) || MyUtils.charEqualsIgnoreCase(humanSymbolInput, O_PIECE);
+	}
+
 	private void askAnother() {
 		System.out.print(String.format(ANOTHER_PROMPT, YES, NO));
-		another = scan.nextLine();
+		anotherGameInput = scan.nextLine();
 	}
 
 	private void askForSymbol() {
 		System.out.print(String.format(SYMBOL_PROMPT, X_PIECE, O_PIECE));
-		userSymbolInput = scan.nextLine();
+		try {
+			humanSymbolInput = scan.nextLine().charAt(0);
+		} catch(StringIndexOutOfBoundsException e) {
+			System.out.println(String.format(SYMBOL_PROMPT_EXCEPTION, X_PIECE, O_PIECE));
+		}
 	}
 
 	private void askForFirstTurn() {
 		System.out.print(String.format(TURN_PROMPT, YES, NO));
-		userFirstTurn = scan.nextLine();
+		playerTurnInput = scan.nextLine();
 	}
 
-	private void askForPiece() {
-		System.out.print(String.format(PIECE_PROMPT, BOARD_TILE_QUANTITY - 1));
-		userIndexInput = scan.nextLine();
+	private void askForTileIndex() {
+		System.out.print(String.format(TILE_INDEX_PROMPT, BOARD_TILE_QUANTITY - 1));
+		humanIndexInput = scan.nextLine();
 	}
 
 	// Ask for a tile index from player
-	private void userTurn() {
+	private void humanMove() {
 		do {
-			askForPiece();
+			askForTileIndex();
 			try {
-				userIndex = Integer.parseInt(userIndexInput);
+				humanIndex = Integer.parseInt(humanIndexInput);
 			} catch(NumberFormatException e) {
 				System.out.println(String.format(TURN_PROMPT_EXCEPTION, BOARD_TILE_QUANTITY - 1));
 			}
 
-		} while(!(userIndex >= 0 && userIndex <= BOARD_TILE_QUANTITY - 1) || !(board.isTileEmpty(userIndex)));
-		user.placeSymbol(userIndex);
+		} while(isValidIndexInput());
+		human.placeSymbol(humanIndex);
 	}
 
 	private char getWinningCharacter() {
@@ -160,9 +153,9 @@ public class TicTacToe {
 	private void printGameResult() {
 		String result = "";
 
-		if(getWinningCharacter() == user.getSymbol()) {
+		if(getWinningCharacter() == human.getSymbol()) {
 			result += "You won!";
-		} else if(getWinningCharacter() == computer.getSymbol()) {
+		} else if(getWinningCharacter() == ai.getSymbol()) {
 			result += "You lost!";
 		} else {
 			result += "Tied game.";

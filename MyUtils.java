@@ -39,23 +39,4 @@ public enum MyUtils {;
 		return result;
 	}
 
-	// int[] arr = {3, 3, 1, 2};
-	public static int getIndexOfLargestInt(int[] arr, int predicate) {
-
-		// Remove predicate ints from array
-		for(int i = 0; i < arr.length; i++) {
-			if(arr[i] == predicate) {
-				arr[i] = 0;
-			}
-		}
-
-		int highestIndex = 0;
-		for(int i = 0; i < arr.length; i++) {
-			if(arr[i] > arr[highestIndex]) {
-				highestIndex = i;
-			}
-		}
-		return highestIndex;
-	}
-
 }
