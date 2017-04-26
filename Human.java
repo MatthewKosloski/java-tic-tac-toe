@@ -1,7 +1,7 @@
 //********************************************************************
 // Human.java
 //
-// A class representing an individual user.
+// A subclass of the Player class that represents the human player.
 //********************************************************************
 
 public class Human extends Player {

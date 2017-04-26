@@ -1,3 +1,9 @@
+//********************************************************************
+// Ai.java
+//
+// A subclass of the Player class that represents the computer player.
+//********************************************************************
+
 import java.util.ArrayList;
 
 public class Ai extends Player {
@@ -7,8 +13,10 @@ public class Ai extends Player {
 	}
 
 	public void calculateBestMove() {
-		// place the Ai symbol on an index value received from minimax
-		placeSymbol(minimax(2, symbol)[1]);
+		// Ai will use minimax 9/10 times and pick a "blind" move 1/10 times
+		int probability = 90, rdm = MyUtils.range(1, 100); 
+		int predicate = (rdm <= probability) ? minimax(2, symbol)[1] : board.getRandomTileIndex();
+		placeSymbol(predicate);
 	}
 
 	// evaluate the state of the board

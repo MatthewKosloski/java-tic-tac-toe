@@ -1,17 +1,19 @@
 //********************************************************************
 // Tile.java
 //
-// A class that represents an individual tile on the grid.
+// A class that represents an individual tile on the board.
 //********************************************************************
 
 public class Tile {
 
-	private final char EMPTY = '-';
+	private final char EMPTY;
 	private int index;
 	private char symbol;
 
-	public Tile() {
-		setSymbol(EMPTY);
+	public Tile(char emptySymbol) {
+		// initially set the tile to empty state
+		EMPTY = emptySymbol;
+		setSymbol(emptySymbol);
 	}
 
 	// Set the tile's symbol

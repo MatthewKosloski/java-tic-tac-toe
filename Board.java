@@ -1,9 +1,7 @@
 //********************************************************************
 // Board.java
 //
-// A class that encapsulates the tiles.
-// This is an aggregate object, for it contains references to 
-// Tiles as instance data.
+// A class that interacts and manages a 2-D array of Tiles.
 //********************************************************************
 
 import java.util.regex.*;
@@ -12,36 +10,69 @@ public class Board {
 
 	public final int BOARD_SIZE, BOARD_TILE_QUANTITY;
 	public final char X_PIECE, O_PIECE, EMPTY_PIECE;
-	private String pieceRegex = "";
 	private Tile[][] tiles;
 
-	// Constructor: Initially populates the board with empty tiles
-	public Board(int boardSize, char xPiece, char oPiece, char emptyPiece) {
-		pieceRegex = String.format("[%1$s%2$s]", xPiece, oPiece);
+	public Board(int boardSize, int boardTileQuantity, char xPiece, char oPiece, char emptyPiece) {
 		BOARD_SIZE = boardSize;
+		BOARD_TILE_QUANTITY = boardTileQuantity;
 		X_PIECE = xPiece;
 		O_PIECE = oPiece;
 		EMPTY_PIECE = emptyPiece;
-		BOARD_TILE_QUANTITY = (int) Math.pow(BOARD_SIZE, 2);
+
 		tiles = new Tile[BOARD_SIZE][BOARD_SIZE];
 		populate();
 	}
 
+	/*
+	 * returns a tile by converting index value to row and column
+	 */
+	public Tile getTile(int index) {
+		int row = (int) Math.floor(index / BOARD_SIZE);
+		int col = (int) Math.floor(index % BOARD_SIZE);
+		return tiles[row][col];
+	}
+
+	/*
+	 * returns whether or not the tile with the index is empty
+	 */
 	public boolean isTileEmpty(int index) {
 		return getTile(index).isEmpty();
 	}
 
+	/*
+	 * returns a 1-D array of tiles
+	 */
 	public Tile[] getTiles() {
 		Tile[] tiles = new Tile[BOARD_TILE_QUANTITY];
 
-		for(int i = 0; i < BOARD_TILE_QUANTITY; i++) {
-			tiles[i] = getTile(i);
-		}
+		for(int i = 0; i < BOARD_TILE_QUANTITY; i++) tiles[i] = getTile(i);
 
 		return tiles;
 	}
 
+	/*
+	 * populates the board with empty tiles
+	 */
+	public void populate() {
+		for(int rows = 0; rows < BOARD_SIZE; rows++) {
+			for(int cols = 0; cols < BOARD_SIZE; cols++) {
+				tiles[rows][cols] = new Tile(EMPTY_PIECE);
+			}
+		}
+
+		// Set tile indices (between 0 and [BOARD_TILE_QUANTITY - 1])
+		for(int i = 0; i < getTiles().length; i++) {
+			getTiles()[i].setIndex(i);
+		}
+
+	}
+
+	/*
+	 * returns a 1-D array of empty tiles
+	 */
 	public Tile[] getAvailableTiles() {
+
+		// count number of empty/available tiles
 		int amountAvailable = 0;
 		for(int i = 0; i < BOARD_TILE_QUANTITY; i++) {
 			if(isTileEmpty(i)) {
@@ -50,10 +81,11 @@ public class Board {
 		}
 
 		Tile[] available = new Tile[amountAvailable];
+
 		int count = 0;
 		for(int i = 0; i < BOARD_TILE_QUANTITY; i++) {
 			if(isTileEmpty(i)) {
-				available[count] = getTile(i);
+				available[count] = getTile(i); 
 				count++;
 			}
 		}
@@ -61,47 +93,20 @@ public class Board {
 		return available;
 	}
 
-	public void setSymbol(int index, char symbol) {
-		getTile(index).setSymbol(symbol);
-	}
-
-	// Populates the board with empty tiles
-	public void populate() {
-		for(int rows = 0; rows < BOARD_SIZE; rows++) {
-			for(int cols = 0; cols < BOARD_SIZE; cols++) {
-				tiles[rows][cols] = new Tile();
-			}
-		}
-
-		// Set tile indices (0-BOARD_TILE_QUANTITY - 1)
-		for(int i = 0; i < getTiles().length; i++) {
-			getTiles()[i].setIndex(i);
-		}
-
+	/*
+	 * returns a random index of an available tile
+	 */
+	public int getRandomTileIndex() {
+		int randomNumber = (int) Math.floor(Math.random() * getAvailableTiles().length);
+		Tile randomTile = getAvailableTiles()[randomNumber];
+		return randomTile.getIndex();
 	}
 
 	/*
-		Returns a Tile from a provided index value 
-		between 0 and BOARD_TILE_QUANTITY - 1.
-
-		Example:
-		If BOARD_SIZE is 3 (3 rows and 3 columns),
-		the index value should be between 0-8.
-	*/
-	public Tile getTile(int index) {
-		int row = (int) Math.floor(index / BOARD_SIZE);
-		int col = (int) Math.floor(index % BOARD_SIZE);
-		return tiles[row][col];
-	}
-
-	public int getAvailableTileIndex() {
-		int index = MyUtils.range(0, 8);
-		Tile tile = getTile(index);
-		if(tile.isEmpty()) {
-			return index;
-		} else {
-			return getAvailableTileIndex();
-		}
+	 * applies a character value to a tile
+	 */
+	public void setSymbol(int index, char symbol) {
+		getTile(index).setSymbol(symbol);
 	}
 
 	/*

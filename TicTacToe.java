@@ -37,7 +37,7 @@ public class TicTacToe {
 
 		while(anotherGameInput.equalsIgnoreCase(YES + "")) {
 
-			board = new Board(BOARD_SIZE, X_PIECE, O_PIECE, EMPTY_PIECE);
+			board = new Board(BOARD_SIZE, BOARD_TILE_QUANTITY, X_PIECE, O_PIECE, EMPTY_PIECE);
 			human = new Human(board, X_PIECE);
 			ai = new Ai(board, O_PIECE);
 
@@ -82,7 +82,7 @@ public class TicTacToe {
 	}
 
 	private boolean isValidTurnInput() {
-		return (playerTurnInput.equals(YES + "") || playerTurnInput.equals(YES + ""));
+		return (playerTurnInput.equals(YES + "") || playerTurnInput.equals(NO + ""));
 	}
 
 	private boolean isValidSymbolInput() {

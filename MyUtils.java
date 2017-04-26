@@ -1,8 +1,7 @@
 //********************************************************************
 // MyUtils.java
 //
-// A simple utility enumated class that possess 
-// several static utility methods.
+// An enumated class with helper functions.
 //********************************************************************
 
 import java.util.Random;
