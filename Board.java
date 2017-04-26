@@ -253,14 +253,6 @@ public class Board {
 		return symbols;
 	}
 
-	public Tile[] getTilesFromDiagonal(int diagonal) {
-		if(diagonal == 0) {
-			return getTopLeftDiagonals();
-		} else {
-			return getTopRightDiagonals();
-		}
-	}
-
 	public String toString() {
 		String result = "";
 		for(int rows = 0; rows < BOARD_SIZE; rows++) {
