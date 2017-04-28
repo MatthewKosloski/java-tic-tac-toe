@@ -1,7 +1,8 @@
 //********************************************************************
 // TicTacToe.java
 //
-// The class for the game itself.
+// The main game class that manages human input and controls the 
+// flow of the game.
 //********************************************************************
 
 import java.util.Scanner;
