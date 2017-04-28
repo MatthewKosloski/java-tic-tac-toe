@@ -5,15 +5,14 @@
 //********************************************************************
 
 import java.util.Scanner;
-import java.util.regex.*;
 
 public class TicTacToe {
 
 	private Scanner scan = new Scanner(System.in);
 
-	private final char X_PIECE = 'X', O_PIECE = 'O', EMPTY_PIECE = '-';
+	private final char X_PIECE, O_PIECE, EMPTY_PIECE;
 	
-	private final int BOARD_SIZE = 3, BOARD_TILE_QUANTITY = (int) Math.pow(BOARD_SIZE, 2);
+	private final int BOARD_SIZE, BOARD_TILE_QUANTITY;
 
 	private final char YES = 'y', NO = 'n';
 
@@ -33,8 +32,16 @@ public class TicTacToe {
 	private Human human;
 	private Ai ai;
 
-	public TicTacToe() {
+	public TicTacToe(char xPiece, char oPiece, char emptyPiece, int boardSize) {
 
+		// assign parameters to constants
+		X_PIECE = xPiece;
+		O_PIECE = oPiece;
+		EMPTY_PIECE = emptyPiece;
+		BOARD_SIZE = boardSize;
+		BOARD_TILE_QUANTITY = (int) Math.pow(BOARD_SIZE, 2); // 3^2
+
+		// while the human wants to play another game, execute the following:
 		while(anotherGameInput.equalsIgnoreCase(YES + "")) {
 
 			board = new Board(BOARD_SIZE, BOARD_TILE_QUANTITY, X_PIECE, O_PIECE, EMPTY_PIECE);
@@ -73,27 +80,49 @@ public class TicTacToe {
 
 	}
 
+	/*
+	 * if the tile index provided by the user is not
+	 * between 0-8 or is occupied, return false, else true
+	 */
 	private boolean isValidIndexInput() {
 		return ((humanIndex >= 0 && humanIndex <= BOARD_TILE_QUANTITY - 1) && board.isTileEmpty(humanIndex));
 	}
 
+	/*
+	 * if there are still unoccupied tiles and no winner, 
+	 * return true, else false
+	 */
 	private boolean gameInProgress() {
 		return board.getAvailableTiles().length != 0 && !hasWinner();
 	}
 
+	/*
+	 * returns true if human provides "y" or "n" to the turn prompt
+	 */
 	private boolean isValidTurnInput() {
 		return (playerTurnInput.equals(YES + "") || playerTurnInput.equals(NO + ""));
 	}
 
+   /*
+	* returns true if human provides "x" or "o" to the symbol prompt (case insensitive)
+	*/
 	private boolean isValidSymbolInput() {
 		return MyUtils.charEqualsIgnoreCase(humanSymbolInput, X_PIECE) || MyUtils.charEqualsIgnoreCase(humanSymbolInput, O_PIECE);
 	}
 
+	/*
+	 * asks the human if they want to play another game and stores
+	 * the input in the anotherGameInput string variable
+	 */
 	private void askAnother() {
 		System.out.print(String.format(ANOTHER_PROMPT, YES, NO));
 		anotherGameInput = scan.nextLine();
 	}
 
+    /*
+     * asks the human for a game piece ("X" or "O") and 
+     * throws an exception if it is not one character in length
+     */
 	private void askForSymbol() {
 		System.out.print(String.format(SYMBOL_PROMPT, X_PIECE, O_PIECE));
 		try {
@@ -103,17 +132,26 @@ public class TicTacToe {
 		}
 	}
 
+    /*
+     * asks the human if they want to go first
+     */
 	private void askForFirstTurn() {
 		System.out.print(String.format(TURN_PROMPT, YES, NO));
 		playerTurnInput = scan.nextLine();
 	}
 
+	/*
+     * asks the human to input an index value between 0 and 8
+     */
 	private void askForTileIndex() {
 		System.out.print(String.format(TILE_INDEX_PROMPT, BOARD_TILE_QUANTITY - 1));
 		humanIndexInput = scan.nextLine();
 	}
 
-	// Ask for a tile index from player
+	/*
+     * asks the human for an index value, and if it is valid, 
+     * the board tile will be occupied with the human's chosen symbol
+     */
 	private void humanMove() {
 		do {
 			askForTileIndex();
@@ -127,35 +165,16 @@ public class TicTacToe {
 		human.placeSymbol(humanIndex);
 	}
 
-	private char getWinningCharacter() {
-		String xPatt = "", oPatt = "";
-		char result = ' ';
-
-		for(int i = 0; i < BOARD_SIZE; i++) {
-			xPatt += X_PIECE + "";
-			oPatt += O_PIECE + "";
-		}
-
-		boolean x = Pattern.compile(xPatt).matcher(board.getBoardString()).find();
-		boolean o = Pattern.compile(oPatt).matcher(board.getBoardString()).find();
-
-		if(x) {
-			result = X_PIECE;
-		} else if(o) {
-			result = O_PIECE;
-		} else {
-			result = ' ';
-		}
-
-		return result;
-	}
-
+	/*
+     * prints the game outcome by comparing the winning
+     * character to each of the players' symbols
+     */
 	private void printGameResult() {
 		String result = "";
 
-		if(getWinningCharacter() == human.getSymbol()) {
+		if(board.getWinningCharacter() == human.getSymbol()) {
 			result += "You won!";
-		} else if(getWinningCharacter() == ai.getSymbol()) {
+		} else if(board.getWinningCharacter() == ai.getSymbol()) {
 			result += "You lost!";
 		} else {
 			result += "Tied game.";
@@ -164,10 +183,16 @@ public class TicTacToe {
 		System.out.println(result);
 	}
 
+	/*
+     * returns true if no tie
+     */
 	private boolean hasWinner() {
-		return getWinningCharacter() != ' ';
+		return board.getWinningCharacter() != ' ';
 	}
 
+	/*
+     * prints the board object to the console
+     */
 	private void printBoard() {
 		System.out.print(board);
 		System.out.println();

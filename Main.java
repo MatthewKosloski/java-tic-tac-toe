@@ -15,7 +15,18 @@ public class Main {
 		System.out.println();
 		System.out.println("=======================================");
 		System.out.println();
-		TicTacToe t = new TicTacToe();
+
+		/*
+		 * new TicTacToe(char xPiece, char oPiece, char emptyPiece, int boardSize)
+		 *
+		 * Parameters:
+		 *
+		 * xPiece - game piece one (doesn't have to be 'X')
+		 * oPiece - game piece two (doesn't have to be 'O')
+		 * emptyPiece - the character that empty tiles occupy
+		 * boardSize - the size of the board (rows and columns)
+		 */
+		TicTacToe t = new TicTacToe('X', 'O', '-', 3);
 
 	}
 

@@ -110,11 +110,11 @@ public class Board {
 	}
 
 	/*
-		Prints a string of the board's rows, columns, and 
-		diagonals separated by spaces.
-	
-		Ex: XXX O-O -O- XO- X-O XO- X-- --X
-	*/
+	 * prints a string of the board's rows, columns, and 
+	 * diagonals separated by spaces.
+	 *
+	 * Example: "XXX O-O -O- XO- X-O XO- X-- --X"
+	 */
 	public String getBoardString() {
 		String[] lines = MyUtils.mergeStringArrays(
 			getRowSymbols(), getColumnSymbols(), getDiagonalSymbols()
@@ -129,6 +129,42 @@ public class Board {
 		return result;
 	}
 
+	/*
+	 * returns the winning character (X, O, or ' ')
+	 */
+	public char getWinningCharacter() {
+		String xPatt = "", oPatt = "";
+		char winner = ' ';
+
+		/*
+		 * create regular expression patterns based on board size.
+		 * if board size is 3, "XXX" or "OOO"
+		 */
+		for(int i = 0; i < BOARD_SIZE; i++) {
+			xPatt += X_PIECE + "";
+			oPatt += O_PIECE + "";
+		}
+
+		boolean x = Pattern.compile(xPatt).matcher(getBoardString()).find();
+		boolean o = Pattern.compile(oPatt).matcher(getBoardString()).find();
+
+		if(x) {
+			winner = X_PIECE;
+		} else if(o) {
+			winner = O_PIECE;
+		} else {
+			winner = ' ';
+		}
+
+		return winner;
+	}
+
+	/*
+	 * returns an array of three strings representing 
+	 * characters in the rows
+	 *
+	 * Example: "XXX"
+	 */
 	private String[] getRowSymbols() {
 		String[] symbols = new String[BOARD_SIZE];
 
@@ -145,16 +181,12 @@ public class Board {
 		return symbols;
 	}
 
-	public Tile[] getTilesFromRow(int row) {
-		Tile[] rowTiles = new Tile[BOARD_SIZE];
-
-		for(int col = 0; col < BOARD_SIZE; col++) {
-			rowTiles[col] = tiles[row][col];
-		}
-
-		return rowTiles;
-	}
-
+	/*
+	 * returns an array of three strings representing 
+	 * characters in the columns
+	 *
+	 * Example: "XXX"
+	 */
 	private Tile[] getColumns() {
 		Tile[] cols = new Tile[BOARD_TILE_QUANTITY];
 
@@ -169,6 +201,12 @@ public class Board {
 		return cols;
 	}
 
+	/*
+	 * returns an array of three strings representing 
+	 * characters in the columns
+	 *
+	 * Example: "XXX"
+	 */
 	private String[] getColumnSymbols() {
 		String[] symbols = new String[BOARD_SIZE];
 
@@ -185,16 +223,15 @@ public class Board {
 		return symbols;
 	}
 
-	public Tile[] getTilesFromColumn(int col) {
-		Tile[] columnTiles = new Tile[BOARD_SIZE];
-
-		for(int row = 0; row < BOARD_SIZE; row++) {
-			columnTiles[row] = tiles[row][col];
-		}
-
-		return columnTiles;
-	}
-
+	/*
+	 * returns the tiles from the top left diagonal
+	 *
+	 * Example board:
+	 *
+	 * T X X
+	 * X T X
+	 * X X T
+	 */
 	private Tile[] getTopLeftDiagonals() {
 		Tile[] topLeftDiagonals = new Tile[BOARD_SIZE];
 
@@ -205,6 +242,15 @@ public class Board {
 		return topLeftDiagonals;
 	}
 
+	/*
+	 * returns the tiles from the top right diagonal
+	 *
+	 * Example board:
+	 *
+	 * X X T
+	 * X T X
+	 * T X X
+	 */
 	private Tile[] getTopRightDiagonals() {
 		Tile[] topRightDiagonals = new Tile[BOARD_SIZE];
 		int col = BOARD_SIZE - 1;
@@ -217,6 +263,15 @@ public class Board {
 		return topRightDiagonals;
 	}
 
+	/*
+	 * returns the tiles from both diagonals
+	 *
+	 * Example board:
+	 *
+	 * T X T
+	 * X T X
+	 * T X T
+	 */
 	private Tile[] getDiagonals() {
 		Tile[] diagonals = new Tile[BOARD_SIZE * 2];
 
@@ -237,6 +292,12 @@ public class Board {
 		return diagonals;
 	}
 
+	/*
+	 * returns an array of two strings representing 
+	 * characters in the diagonals
+	 *
+	 * Example: "XXX"
+	 */
 	private String[] getDiagonalSymbols() {
 		String[] symbols = new String[2];
 
@@ -253,6 +314,14 @@ public class Board {
 		return symbols;
 	}
 
+	/*
+	 * compiles a string representation of the board
+	 *
+	 * Example:
+	 * X X O
+	 * X O O
+	 * O X X
+	 */
 	public String toString() {
 		String result = "";
 		for(int rows = 0; rows < BOARD_SIZE; rows++) {

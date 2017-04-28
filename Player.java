@@ -1,8 +1,7 @@
 //********************************************************************
 // Player.java
 //
-// Represents a generic player class with 
-// methods to manage its symbol.
+// Represents a generic player class with methods to manage its symbol.
 //********************************************************************
 
 public class Player {
@@ -23,8 +22,7 @@ public class Player {
 	}
 
 	public void placeSymbol(int index) {
-		Tile t = board.getTile(index);
-		t.setSymbol(symbol);
+		board.getTile(index).setSymbol(symbol);
 	}
 
 	public String toString() {

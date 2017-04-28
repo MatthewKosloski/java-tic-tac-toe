@@ -12,6 +12,11 @@ public class Ai extends Player {
 		super(board, symbol);
 	}
 
+	/*
+	 * calculates an index value (0-8) based on a 
+	 * probability and places the Ai's symbol
+	 * on the tile with that index.
+	 */
 	public void calculateBestMove() {
 		// Ai will use minimax 9/10 times and pick a "blind" move 1/10 times
 		int probability = 90, rdm = MyUtils.range(1, 100); 
