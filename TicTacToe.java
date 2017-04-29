@@ -42,43 +42,33 @@ public class TicTacToe {
 		BOARD_SIZE = boardSize;
 		BOARD_TILE_QUANTITY = (int) Math.pow(BOARD_SIZE, 2); // 3^2
 
-		// while the human wants to play another game, execute the following:
-		while(anotherGameInput.equalsIgnoreCase(YES + "")) {
+		board = new Board(BOARD_SIZE, BOARD_TILE_QUANTITY, X_PIECE, O_PIECE, EMPTY_PIECE);
+		human = new Human(board, X_PIECE);
+		ai = new Ai(board, O_PIECE);
 
-			board = new Board(BOARD_SIZE, BOARD_TILE_QUANTITY, X_PIECE, O_PIECE, EMPTY_PIECE);
-			human = new Human(board, X_PIECE);
-			ai = new Ai(board, O_PIECE);
+		/*
+		 * Example scenario:
+		 * Human = X, Ai = O; Human plays first
+		 */
 
-			// Ask for the user's desired game piece (X or O)
-			do { askForSymbol(); } while(!isValidSymbolInput());
+		human.placeSymbol(1);
+		ai.placeSymbol(0);
 
-			// Set both player's symbols
-			human.setSymbol(humanSymbolInput);
-			ai.setSymbol(MyUtils.charEqualsIgnoreCase(humanSymbolInput, X_PIECE) ? O_PIECE : X_PIECE);
+		human.placeSymbol(4);
+		ai.placeSymbol(7);
 
-			// Ask if the user wants to go first
-			do { askForFirstTurn(); } while(!isValidTurnInput());
+		human.placeSymbol(6);
+		ai.placeSymbol(2);
 
-			// If player is first...
-			if(playerTurnInput.equals(YES+"")) {
-				humanMove();
-				ai.calculateBestMove();
-				printBoard();
-			} else {
-				ai.calculateBestMove();
-				printBoard();
-			}
+		System.out.println("Board BEFORE minimax algorithm:");
+		printBoard();
 
-			while(gameInProgress()) {
-				humanMove();
-				if(!hasWinner()) ai.calculateBestMove();
-				printBoard();
-			}
+		System.out.println("Calculated board states:");
 
-			printGameResult();
-			askAnother();
-		}
+		ai.calculateBestMove();
 
+		System.out.println("Board AFTER minimax algorithm:");
+		printBoard();
 	}
 
 	/*

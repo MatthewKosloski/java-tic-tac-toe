@@ -165,7 +165,7 @@ public class Board {
 	 *
 	 * Example: "XXX"
 	 */
-	private String[] getRowSymbols() {
+	public String[] getRowSymbols() {
 		String[] symbols = new String[BOARD_SIZE];
 
 		int count = 0;
@@ -207,7 +207,7 @@ public class Board {
 	 *
 	 * Example: "XXX"
 	 */
-	private String[] getColumnSymbols() {
+	public String[] getColumnSymbols() {
 		String[] symbols = new String[BOARD_SIZE];
 
 		int count = 0;
@@ -298,7 +298,7 @@ public class Board {
 	 *
 	 * Example: "XXX"
 	 */
-	private String[] getDiagonalSymbols() {
+	public String[] getDiagonalSymbols() {
 		String[] symbols = new String[2];
 
 		int count = 0;
