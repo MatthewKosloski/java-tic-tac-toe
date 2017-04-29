@@ -51,15 +51,12 @@ public class TicTacToe {
 		 * Human = X, Ai = O; Human plays first
 		 */
 
-		human.placeSymbol(0);
 		human.placeSymbol(1);
-		// ai.placeSymbol(0);
-
-		// human.placeSymbol(4);
-		// ai.placeSymbol(7);
-
-		// human.placeSymbol(6);
-		// ai.placeSymbol(2);
+		human.placeSymbol(4);
+		human.placeSymbol(6);
+		ai.placeSymbol(0);
+		ai.placeSymbol(2);
+		ai.placeSymbol(7);
 
 		System.out.println("Board BEFORE minimax algorithm:");
 		printBoard();

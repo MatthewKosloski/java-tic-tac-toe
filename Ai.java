@@ -33,8 +33,8 @@ public class Ai extends Player {
 		int bestMove = 0;
 
 		if(depth == 0) {
-			System.out.println(board);
 			bestScore = evaluate(board.getBoardString().split(" "));
+			System.out.println(board);
 		} else {
 			// create potential moves for each all unoccupied tiles
 			for(int i = 0; i < board.getAvailableTiles().length; i++) {
