@@ -26,7 +26,6 @@ public class Ai extends Player {
 
 	private int[] minimax(int depth, char player) {
 
-
 		ArrayList<AiMove> moves = new ArrayList<AiMove>();
 		
 		int bestScore = (player == (symbol)) ? Integer.MIN_VALUE : Integer.MAX_VALUE;
