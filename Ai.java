@@ -24,69 +24,6 @@ public class Ai extends Player {
 		placeSymbol(predicate);
 	}
 
-	// evaluate the state of the board
-	private int evaluate() {
-		int score = 0;
-		score += evaluateLine(0, 1, 2); // row 1
-		score += evaluateLine(3, 4, 5); // row 2
-		score += evaluateLine(6, 7, 8); // row 3
-		score += evaluateLine(0, 3, 6); // col 1
-		score += evaluateLine(1, 4, 7); // col 2
-		score += evaluateLine(2, 5, 8); // col 3
-		score += evaluateLine(0, 4, 8); // diag 1
-		score += evaluateLine(2, 4, 6); // diag 2
-		return score;
-	}
-
-	// return -100, -10, -1, 
-	private int evaluateLine(int a, int b, int c) {
-		int score = 0;
-
-		if(board.getTile(a).getSymbol() == (symbol)) {
-			score = 1;
-		} else if(board.getTile(a).getSymbol() != (symbol)) {
-			score = -1;
-		}
-
-		if(board.getTile(b).getSymbol() == (symbol)) {
-			if(score == 1) {
-				score = 10;
-			} else if(score == -1) {
-				return 0;
-			} else {
-				score = 1;
-			}
-		} else if(board.getTile(b).getSymbol() != (symbol)) {
-			if(score == -1) {
-				score = -10;
-			} else if(score == 1) {
-				return 0;
-			} else {
-				score = -1;
-			}
-		}
-
-		if(board.getTile(c).getSymbol() == (symbol)) {
-			if(score > 0) {
-				score *= 10;
-			} else if(score < 0) {
-				return 0;
-			} else {
-				score = 1;
-			}
-		} else if(board.getTile(c).getSymbol() != (symbol)) {
-			if(score < 0) {
-				score *= 10;
-			} else if(score > 1) {
-				return 0;
-			} else {
-				score = -1;
-			}
-		}
-
-		return score;
-	}
-
 	private int[] minimax(int depth, char player) {
 
 		ArrayList<AiMove> moves = new ArrayList<AiMove>();
@@ -94,8 +31,8 @@ public class Ai extends Player {
 		int bestScore = (player == (symbol)) ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 		int bestMove = 0;
 
-		if(board.getAvailableTiles().length == 0 || depth == 0) {
-			bestScore = evaluate();
+		if(depth == 0) {
+			bestScore = evaluate(board.getBoardString().split(" "));
 		} else {
 
 			for(int i = 0; i < board.getAvailableTiles().length; i++) {
@@ -132,6 +69,24 @@ public class Ai extends Player {
 
 		// return arr of best score and best index value
 		return new int[] {bestScore, bestMove};
+	}
+
+	private int evaluate(String[] boardString) {
+		int score = 0;
+		for(int i = 0; i < boardString.length; i++) {
+			String currentPair = boardString[i];
+			for(int j = 0; j < currentPair.length(); j++) {
+				char currentSymbol = currentPair.charAt(j);
+				if(currentSymbol == symbol) {
+					score += 10;
+				} else if(currentSymbol == board.EMPTY_PIECE) {
+					score += 0;
+				} else {
+					score += -10;
+				}
+			}
+		}
+		return score;
 	}
 
 	private class AiMove {
