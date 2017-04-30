@@ -93,30 +93,4 @@ public class Ai extends Player {
 		return score;
 	}
 
-	private class AiMove {
-
-		private int index, score;
-
-		public AiMove(int index) {
-			setIndex(index);
-		}
-
-		public int getIndex() {
-			return index;
-		}
-
-		public void setIndex(int index) {
-			this.index = index;
-		}
-
-		public int getScore() {
-			return score;
-		}
-
-		public void setScore(int score) {
-			this.score = score;
-		}
-
-	}
-
 }
