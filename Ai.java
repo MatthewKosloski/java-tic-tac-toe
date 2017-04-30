@@ -18,10 +18,9 @@ public class Ai extends Player {
 	 * on the tile with that index.
 	 */
 	public void calculateBestMove() {
-		// Ai will use minimax 9/10 times and pick a "blind" move 1/10 times
-		int probability = 90, rdm = MyUtils.range(1, 100); 
-		int predicate = (rdm <= probability) ? minimax(2, symbol)[1] : board.getRandomTileIndex();
-		placeSymbol(predicate);
+		if(board.getAvailableTiles().length > 0 && board.getWinningCharacter() == ' ') {
+			placeSymbol(minimax(2, symbol)[1]);
+		}
 	}
 
 	private int[] minimax(int depth, char player) {
@@ -34,8 +33,9 @@ public class Ai extends Player {
 		if(depth == 0) {
 			bestScore = evaluate(board.getBoardString().split(" "));
 		} else {
-
+			// create potential moves for each all unoccupied tiles
 			for(int i = 0; i < board.getAvailableTiles().length; i++) {
+				// create a move object to store its index and place Ai symbol on that index
 				AiMove move = new AiMove(board.getAvailableTiles()[i].getIndex());
 				board.setSymbol(move.getIndex(), player);
 
@@ -49,7 +49,10 @@ public class Ai extends Player {
 				moves.add(move);
 			}
 
+			// sort through the moves:
+
 			if(player == (symbol)) {
+				// find the move with the largest score (maximize)
 				for(int i = 0; i < moves.size(); i++) {
 					if(moves.get(i).getScore() > bestScore) {
 						bestScore = moves.get(i).getScore();
@@ -57,6 +60,7 @@ public class Ai extends Player {
 					}
 				}
 			} else {
+				// find the move with the smallest score (minimize)
 				for(int i = 0; i < moves.size(); i++) {
 					if(moves.get(i).getScore() < bestScore) {
 						bestScore = moves.get(i).getScore();
@@ -67,7 +71,7 @@ public class Ai extends Player {
 
 		}
 
-		// return arr of best score and best index value
+		// return an array of the best score and best index value
 		return new int[] {bestScore, bestMove};
 	}
 
@@ -88,4 +92,31 @@ public class Ai extends Player {
 		}
 		return score;
 	}
+
+	private class AiMove {
+
+		private int index, score;
+
+		public AiMove(int index) {
+			setIndex(index);
+		}
+
+		public int getIndex() {
+			return index;
+		}
+
+		public void setIndex(int index) {
+			this.index = index;
+		}
+
+		public int getScore() {
+			return score;
+		}
+
+		public void setScore(int score) {
+			this.score = score;
+		}
+
+	}
+
 }

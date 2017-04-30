@@ -71,7 +71,7 @@ public class TicTacToe {
 
 			while(gameInProgress()) {
 				humanMove();
-				if(!hasWinner()) ai.calculateBestMove();
+				ai.calculateBestMove();			
 				printBoard();
 			}
 
